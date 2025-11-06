@@ -1,5 +1,6 @@
 package com.example.movieapplication
 
+
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -20,13 +21,34 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.example.movieapplication.ui.theme.MovieApplicationTheme
-import kotlin.text.ifEmpty
 
-class MainScreen : ComponentActivity() {
+class EnterItems : ComponentActivity() {
+
+    companion object {
+        // Available items (from picture)
+        val availableItems = arrayOf("T-shirts and pants", "Toothbrush", "Shoes", "Passport")
+        val availableCategories = arrayOf("Clothing", "Toiletries", "Clothing", "Documents")
+        val availableQuantities = arrayOf(5, 1, 2, 1)
+        val availableComments = arrayOf(
+            "Comfortable for travel",
+            "Essential for hygiene",
+            "Walking and smart casual",
+            "Don't forget this!"
+        )
+
+        // User-selected packing lists (parallel arrays)
+        val selectedItems = mutableListOf<String>()
+        val selectedCategories = mutableListOf<String>()
+        val selectedQuantities = mutableListOf<Int>()
+        val selectedComments = mutableListOf<String>()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             MovieApplicationTheme {
                 var expanded by remember { mutableStateOf(false) }
@@ -96,7 +118,7 @@ class MainScreen : ComponentActivity() {
                                 expanded = expanded,
                                 onDismissRequest = { expanded = false }
                             ) {
-                                MainScreen.availableItems.forEachIndexed { idx, name ->
+                                EnterItems.availableItems.forEachIndexed { idx, name ->
                                     DropdownMenuItem(
                                         text = { Text(name) },
                                         onClick = {
@@ -143,13 +165,13 @@ class MainScreen : ComponentActivity() {
                                     // Validate item exists in available list
                                     val idx = availableItems.indexOf(chosenItem)
                                     if (idx == -1) {
-                                        Toast.makeText(this@MainScreen, "Error: choose an item from the available list.", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this@EnterItems, "Error: choose an item from the available list.", Toast.LENGTH_SHORT).show()
                                         return@Button
                                     }
 
                                     val qty = quantity.toIntOrNull()
                                     if (qty == null || qty <= 0) {
-                                        Toast.makeText(this@MainScreen, "Enter a valid quantity (greater than 0).", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this@EnterItems, "Enter a valid quantity (greater than 0).", Toast.LENGTH_SHORT).show()
                                         return@Button
                                     }
 
@@ -159,7 +181,7 @@ class MainScreen : ComponentActivity() {
                                     selectedQuantities.add(qty)
                                     selectedComments.add(if (comment.isEmpty()) availableComments[idx] else comment)
 
-                                    Toast.makeText(this@MainScreen, "Added: $chosenItem", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@EnterItems, "Added: $chosenItem", Toast.LENGTH_SHORT).show()
 
                                     // clear entry fields
                                     chosenItem = ""
@@ -173,13 +195,13 @@ class MainScreen : ComponentActivity() {
                             }
 
                             Button(onClick = {
-                                startActivity(Intent(this@MainScreen, DetailedViewScreen::class.java))
+                                startActivity(Intent(this@EnterItems, DisplayItems::class.java))
                             }) {
                                 Text("Display")
                             }
 
                             OutlinedButton(onClick = {
-                                startActivity(Intent(this@MainScreen, MainActivity::class.java))
+                                startActivity(Intent(this@EnterItems, MainActivity::class.java))
                                 finish()
                             }) {
                                 Icon(Icons.Default.Clear, contentDescription = "Exit")
@@ -201,4 +223,3 @@ class MainScreen : ComponentActivity() {
         }
     }
 }
-
