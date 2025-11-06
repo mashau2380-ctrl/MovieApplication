@@ -28,7 +28,7 @@ class DetailedViewScreen : ComponentActivity() {
             MovieApplicationTheme {
                 DetailedViewScreen(
                     onBack = {
-                        // Navigate back to EnterItems screen
+                        // Navigate back to Main screen
                         val intent = Intent(this, MainScreen::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
@@ -36,9 +36,9 @@ class DetailedViewScreen : ComponentActivity() {
                     },
                     onClear = {
                         // Clear all added items
-                        MainScreen.selectedItems.clear()
-                        MainScreen.selectedCategories.clear()
-                        MainScreen.selectedQuantities.clear()
+                        MainScreen.selectedMovie.clear()
+                        MainScreen.selecteddirector.clear()
+                        MainScreen.selectedRating.clear()
                         MainScreen.selectedComments.clear()
                     }
                 )
@@ -49,9 +49,9 @@ class DetailedViewScreen : ComponentActivity() {
 
 @Composable
 fun DetailedViewScreen(onBack: () -> Unit, onClear: () -> Unit) {
-    val items = MainScreen.selectedItems
-    val categories = MainScreen.selectedCategories
-    val quantities = MainScreen.selectedQuantities
+    val items = MainScreen.selectedMovie
+    val director = MainScreen.selecteddirector
+    val rating = MainScreen.selectedRating
     val comments = MainScreen.selectedComments
 
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -60,7 +60,7 @@ fun DetailedViewScreen(onBack: () -> Unit, onClear: () -> Unit) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Text("Your Packing List", style = MaterialTheme.typography.headlineSmall)
+            Text("Your selected movie", style = MaterialTheme.typography.headlineSmall)
             Spacer(modifier = Modifier.height(12.dp))
 
             if (items.isEmpty()) {
@@ -75,10 +75,10 @@ fun DetailedViewScreen(onBack: () -> Unit, onClear: () -> Unit) {
                         modifier = Modifier.padding(20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("No items yet", style = MaterialTheme.typography.titleMedium)
+                        Text("No movie yet", style = MaterialTheme.typography.titleMedium)
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            "You haven't added any items. Go back and add from the available list.",
+                            "You haven't added any movie. Go back and add from the available list.",
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
@@ -88,7 +88,7 @@ fun DetailedViewScreen(onBack: () -> Unit, onClear: () -> Unit) {
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    itemsIndexed(items) { index, item ->
+                    this.itemsIndexed(items) { index, item ->
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp),
@@ -104,10 +104,10 @@ fun DetailedViewScreen(onBack: () -> Unit, onClear: () -> Unit) {
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Text(item, style = MaterialTheme.typography.titleMedium)
-                                    Text("x${quantities[index]}", style = MaterialTheme.typography.titleSmall)
+                                    Text("x${rating[index]}", style = MaterialTheme.typography.titleSmall)
                                 }
                                 Spacer(Modifier.height(8.dp))
-                                Text("Category: ${categories[index]}", style = MaterialTheme.typography.bodyMedium)
+                                Text("director: ${director[index]}", style = MaterialTheme.typography.bodyMedium)
                                 Spacer(Modifier.height(6.dp))
                                 Text("Note: ${comments[index]}", style = MaterialTheme.typography.bodySmall)
                             }
@@ -130,7 +130,7 @@ fun DetailedViewScreen(onBack: () -> Unit, onClear: () -> Unit) {
                 }
 
                 Button(
-                    onClick = { onClear () },
+                    onClick = { onClear ( ) },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer)
                 ) {

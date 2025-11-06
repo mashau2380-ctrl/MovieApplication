@@ -1,6 +1,7 @@
 package com.example.movieapplication
 
 
+import android.R.attr.rating
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -28,20 +29,24 @@ class MainScreen : ComponentActivity() {
 
     companion object {
         // Available items (from picture)
-        val availableItems = arrayOf("T-shirts and pants", "Toothbrush", "Shoes", "Passport")
-        val availableCategories = arrayOf("Clothing", "Toiletries", "Clothing", "Documents")
-        val availableQuantities = arrayOf(5, 1, 2, 1)
+        val availableMovie = arrayOf("THe GodFather", "The Dark Knight Pulp Fiction","Oh Schuks... I'm Gatvol",
+            "Die Fighting","Hobbs and Shaw")
+        val availableDirector = arrayOf("Francis Ford Coppola", "Quentin Tarantino","Leon Schuster & Willie Esterhuizen",
+            "Fabien Gorchon","David Leitch")
+        val availableRating = arrayOf(5, 4, 5, 3, 3.6)
         val availableComments = arrayOf(
-            "Comfortable for travel",
-            "Essential for hygiene",
-            "Walking and smart casual",
-            "Don't forget this!"
+            "A masterpiece of cinema",
+            "Quirky and captivating",
+            "You'll laugh like never before",
+            "Fighting from the begging till end",
+            "A wild ride of action and comedy"
+
         )
 
         // User-selected packing lists (parallel arrays)
-        val selectedItems = mutableListOf<String>()
-        val selectedCategories = mutableListOf<String>()
-        val selectedQuantities = mutableListOf<Int>()
+        val selectedMovie = mutableListOf<String>()
+        val selecteddirector = mutableListOf<String>()
+        val selectedRating = mutableListOf<Int>()
         val selectedComments = mutableListOf<String>()
     }
 
@@ -52,16 +57,16 @@ class MainScreen : ComponentActivity() {
         setContent {
             MovieApplicationTheme {
                 var expanded by remember { mutableStateOf(false) }
-                var chosenItem by remember { mutableStateOf("") }
-                var category by remember { mutableStateOf("") }
-                var quantity by remember { mutableStateOf("") }
+                var Movie by remember { mutableStateOf("") }
+                var director by remember { mutableStateOf("") }
+                var Rating by remember { mutableStateOf("") }
                 var comment by remember { mutableStateOf("") }
 
                 // If user selects an available item, auto-fill category & default quantity/comment
                 fun onItemSelected(index: Int) {
-                    chosenItem = availableItems[index]
-                    category = availableCategories[index]
-                    quantity = availableQuantities[index].toString()
+                    Movie = availableMovie[index]
+                    director = availableDirector[index]
+                    Rating =availableRating[index].toString()
                     comment = availableComments[index]
                 }
 
@@ -73,17 +78,17 @@ class MainScreen : ComponentActivity() {
                         horizontalAlignment = Alignment.Start,
                         verticalArrangement = Arrangement.Top
                     ) {
-                        Text("Enter Details for Packing List", style = MaterialTheme.typography.headlineSmall)
+                        Text("Enter Details for Movie", style = MaterialTheme.typography.headlineSmall)
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        // Available items row (informational)
-                        Text("Available items (tap to auto-fill):", style = MaterialTheme.typography.titleMedium)
+                        // Available movie row (informational)
+                        Text("Available Movie (tap to auto-fill):", style = MaterialTheme.typography.titleMedium)
                         Spacer(modifier = Modifier.height(8.dp))
                         LazyRow(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            itemsIndexed(availableItems) { index, name ->
+                            itemsIndexed(availableMovie) { index, name ->
                                 Card(
                                     shape = RoundedCornerShape(8.dp),
                                     modifier = Modifier
@@ -100,12 +105,12 @@ class MainScreen : ComponentActivity() {
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Dropdown/select field for item (user can still type or choose)
+                        // Dropdown/select field for movie (user can still type or choose)
                         Box {
                             OutlinedTextField(
-                                value = chosenItem,
-                                onValueChange = { chosenItem = it },
-                                label = { Text("Item name (choose from available)") },
+                                value = Movie,
+                                onValueChange = { Movie = it },
+                                label = { Text("Movie title (choose from available)") },
                                 trailingIcon = {
                                     IconButton(onClick = { expanded = !expanded }) {
                                         Icon(Icons.Default.ArrowDropDown, contentDescription = "Select")
@@ -118,7 +123,7 @@ class MainScreen : ComponentActivity() {
                                 expanded = expanded,
                                 onDismissRequest = { expanded = false }
                             ) {
-                                MainScreen.availableItems.forEachIndexed { idx, name ->
+                                MainScreen.availableMovie.forEachIndexed { idx, name ->
                                     DropdownMenuItem(
                                         text = { Text(name) },
                                         onClick = {
@@ -133,18 +138,18 @@ class MainScreen : ComponentActivity() {
                         Spacer(modifier = Modifier.height(8.dp))
 
                         OutlinedTextField(
-                            value = category,
-                            onValueChange = { category = it },
-                            label = { Text("Category") },
+                            value = director,
+                            onValueChange = { director = it },
+                            label = { Text("Director") },
                             modifier = Modifier.fillMaxWidth()
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
 
                         OutlinedTextField(
-                            value = quantity,
-                            onValueChange = { quantity = it },
-                            label = { Text("Quantity") },
+                            value = Rating,
+                            onValueChange = { Rating = it },
+                            label = { Text("Rating") },
                             modifier = Modifier.fillMaxWidth()
                         )
 
@@ -162,42 +167,42 @@ class MainScreen : ComponentActivity() {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                             Button(
                                 onClick = {
-                                    // Validate item exists in available list
-                                    val idx = availableItems.indexOf(chosenItem)
+                                    // Validate movie exists in available list
+                                    val idx =availableMovie.indexOf(Movie)
                                     if (idx == -1) {
-                                        Toast.makeText(this@MainScreen, "Error: choose an item from the available list.", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this@MainScreen, "Error: choose an Movie from the available list.", Toast.LENGTH_SHORT).show()
                                         return@Button
                                     }
 
-                                    val qty = quantity.toIntOrNull()
-                                    if (qty == null || qty <= 0) {
-                                        Toast.makeText(this@MainScreen, "Enter a valid quantity (greater than 0).", Toast.LENGTH_SHORT).show()
+                                    val rating = Rating.toIntOrNull()
+                                    if (rating == null || rating <= 0) {
+                                        Toast.makeText(this@MainScreen, "Enter a valid Rating (greater than 0).", Toast.LENGTH_SHORT).show()
                                         return@Button
                                     }
 
                                     // Add to parallel arrays
-                                    selectedItems.add(chosenItem)
-                                    selectedCategories.add(category.ifEmpty { availableCategories[idx] })
-                                    selectedQuantities.add(qty)
+                                    selectedMovie.add(Movie)
+                                    selecteddirector.add(director.ifEmpty { availableDirector[idx] })
+                                    selectedRating.add(rating)
                                     selectedComments.add(if (comment.isEmpty()) availableComments[idx] else comment)
 
-                                    Toast.makeText(this@MainScreen, "Added: $chosenItem", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@MainScreen, "Added: $Movie", Toast.LENGTH_SHORT).show()
 
                                     // clear entry fields
-                                    chosenItem = ""
-                                    category = ""
-                                    quantity = ""
+                                    Movie = ""
+                                    director = ""
+                                    Rating = ""
                                     comment = ""
                                 },
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2563EB))
                             ) {
-                                Text("Add")
+                                Text("Add Movie")
                             }
 
                             Button(onClick = {
                                 startActivity(Intent(this@MainScreen, DetailedViewScreen::class.java))
                             }) {
-                                Text("Display")
+                                Text("Review Movie")
                             }
 
                             OutlinedButton(onClick = {
@@ -214,7 +219,7 @@ class MainScreen : ComponentActivity() {
 
                         // Helpful hint
                         Text(
-                            "Tip: tap an available item above to auto-fill fields, then press Add.",
+                            "Tip: tap an available Movie above to auto-fill fields, then press Add Movie.",
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
