@@ -58,7 +58,7 @@ fun MainScreenContent(onStartClick: () -> Unit) {
             modifier = Modifier.padding(24.dp)
         ) {
 
-            // 🎬 App logo (optional)
+            // App logo
             Image(
                 painter = painterResource(id = R.drawable.ic_movie), // add your logo in res/drawable
                 contentDescription = "Movie App Logo",
