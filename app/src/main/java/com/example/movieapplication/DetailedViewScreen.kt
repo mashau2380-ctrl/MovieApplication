@@ -19,27 +19,27 @@ import com.example.movieapplication.ui.theme.MovieApplicationTheme
 import kotlin.text.clear
 import kotlin.text.get
 
-class DisplayItems : ComponentActivity() {
+class DetailedViewScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
             MovieApplicationTheme {
-                DisplayScreen(
+                DetailedViewScreen(
                     onBack = {
                         // Navigate back to EnterItems screen
-                        val intent = Intent(this, EnterItems::class.java)
+                        val intent = Intent(this, MainScreen::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()
                     },
                     onClear = {
                         // Clear all added items
-                        EnterItems.selectedItems.clear()
-                        EnterItems.selectedCategories.clear()
-                        EnterItems.selectedQuantities.clear()
-                        EnterItems.selectedComments.clear()
+                        MainScreen.selectedItems.clear()
+                        MainScreen.selectedCategories.clear()
+                        MainScreen.selectedQuantities.clear()
+                        MainScreen.selectedComments.clear()
                     }
                 )
             }
@@ -48,11 +48,11 @@ class DisplayItems : ComponentActivity() {
 }
 
 @Composable
-fun DisplayScreen(onBack: () -> Unit, onClear: () -> Unit) {
-    val items = EnterItems.selectedItems
-    val categories = EnterItems.selectedCategories
-    val quantities = EnterItems.selectedQuantities
-    val comments = EnterItems.selectedComments
+fun DetailedViewScreen(onBack: () -> Unit, onClear: () -> Unit) {
+    val items = MainScreen.selectedItems
+    val categories = MainScreen.selectedCategories
+    val quantities = MainScreen.selectedQuantities
+    val comments = MainScreen.selectedComments
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -126,7 +126,7 @@ fun DisplayScreen(onBack: () -> Unit, onClear: () -> Unit) {
                     onClick = { onBack() },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Back to Add")
+                    Text("Back to Main Screen")
                 }
 
                 Button(

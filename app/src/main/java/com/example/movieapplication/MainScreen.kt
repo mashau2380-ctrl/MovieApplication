@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.movieapplication.ui.theme.MovieApplicationTheme
 
-class EnterItems : ComponentActivity() {
+class MainScreen : ComponentActivity() {
 
     companion object {
         // Available items (from picture)
@@ -118,7 +118,7 @@ class EnterItems : ComponentActivity() {
                                 expanded = expanded,
                                 onDismissRequest = { expanded = false }
                             ) {
-                                EnterItems.availableItems.forEachIndexed { idx, name ->
+                                MainScreen.availableItems.forEachIndexed { idx, name ->
                                     DropdownMenuItem(
                                         text = { Text(name) },
                                         onClick = {
@@ -165,13 +165,13 @@ class EnterItems : ComponentActivity() {
                                     // Validate item exists in available list
                                     val idx = availableItems.indexOf(chosenItem)
                                     if (idx == -1) {
-                                        Toast.makeText(this@EnterItems, "Error: choose an item from the available list.", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this@MainScreen, "Error: choose an item from the available list.", Toast.LENGTH_SHORT).show()
                                         return@Button
                                     }
 
                                     val qty = quantity.toIntOrNull()
                                     if (qty == null || qty <= 0) {
-                                        Toast.makeText(this@EnterItems, "Enter a valid quantity (greater than 0).", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this@MainScreen, "Enter a valid quantity (greater than 0).", Toast.LENGTH_SHORT).show()
                                         return@Button
                                     }
 
@@ -181,7 +181,7 @@ class EnterItems : ComponentActivity() {
                                     selectedQuantities.add(qty)
                                     selectedComments.add(if (comment.isEmpty()) availableComments[idx] else comment)
 
-                                    Toast.makeText(this@EnterItems, "Added: $chosenItem", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@MainScreen, "Added: $chosenItem", Toast.LENGTH_SHORT).show()
 
                                     // clear entry fields
                                     chosenItem = ""
@@ -195,13 +195,13 @@ class EnterItems : ComponentActivity() {
                             }
 
                             Button(onClick = {
-                                startActivity(Intent(this@EnterItems, DisplayItems::class.java))
+                                startActivity(Intent(this@MainScreen, DetailedViewScreen::class.java))
                             }) {
                                 Text("Display")
                             }
 
                             OutlinedButton(onClick = {
-                                startActivity(Intent(this@EnterItems, MainActivity::class.java))
+                                startActivity(Intent(this@MainScreen, MainActivity::class.java))
                                 finish()
                             }) {
                                 Icon(Icons.Default.Clear, contentDescription = "Exit")

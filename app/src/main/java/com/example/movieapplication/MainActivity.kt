@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     Text("Welcome to Travel Packing List Manager")
 
                     Button(onClick = {
-                        val start = Intent(this@MainActivity, EnterItems::class.java)
+                        val start = Intent(this@MainActivity, MainScreen::class.java)
                         startActivity(start)
                     }) {
                         Text("Start")
